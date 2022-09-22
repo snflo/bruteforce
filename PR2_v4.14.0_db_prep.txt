@@ -1,0 +1,29 @@
+#!/bin/bash
+#SBATCH --account=nn9320k
+#SBATCH --job-name=pipe_asvs
+#SBATCH --time=1-00:00:00
+#SBATCH --partition=normal
+#SBATCH --ntasks=1 --cpus-per-task=1
+#SBATCH --mem-per-cpu=8G
+set -o errexit
+set -o nounset
+cd /cluster/projects/nn9320k/saga_snorref/PR2/
+
+echo	Building a blast database from protist ribosomal database pr2
+
+Echo	Downloading latest version of PR2 database
+wget -P pr2_version_4.14.0_SSU_taxo_long.fasta.gz https://github.com/pr2database/pr2database/releases/download/v4.14.0/pr2_version_4.14.0_SSU_taxo_long.fasta.gz
+
+Echo	Unzipping
+gzip -d *.gz
+
+Echo	Converting the Pr2 database to a blast-database using the BLAST+ makeblastdb function
+Echo	Using v. 4.14.0 released 25.06.21
+module load BLAST+/2.8.1-foss-2018b
+module ls
+echo	Describe input file, database type nucl, input type, title and output file name
+makeblastdb -in pr2_version_4.14.0_SSU_taxo_long.fasta -dbtype nucl -input_type fasta -title pr2_blast_db -out pr2_blast_db
+
+echo	Finished
+module purge
+exit 0
