@@ -11,14 +11,14 @@ cd /cluster/projects/nn9320k/saga_snorref/PR2/
 
 echo	Building a blast database from protist ribosomal database pr2
 
-Echo	Downloading latest version of PR2 database
+echo	Downloading latest version of PR2 database
 wget -P pr2_version_4.14.0_SSU_taxo_long.fasta.gz https://github.com/pr2database/pr2database/releases/download/v4.14.0/pr2_version_4.14.0_SSU_taxo_long.fasta.gz
 
-Echo	Unzipping
+echo	Unzipping
 gzip -d *.gz
 
-Echo	Converting the Pr2 database to a blast-database using the BLAST+ makeblastdb function
-Echo	Using v. 4.14.0 released 25.06.21
+echo	Converting the Pr2 database to a blast-database using the BLAST+ makeblastdb function
+echo	Using v. 4.14.0 released 25.06.21
 module load BLAST+/2.8.1-foss-2018b
 module ls
 echo	Describe input file, database type nucl, input type, title and output file name
