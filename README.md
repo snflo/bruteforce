@@ -18,4 +18,3 @@ Software/version used:
 * VSEARCH/2.9.1
 
 September 2022, Snorre Flo
----
