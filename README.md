@@ -13,8 +13,8 @@ Additional scripts for quality checking and generating database for taxonomic as
 * fastqc_stats_jobscript.txt
 * PR2_v4.14.0_db_prep.txt
 
-Software required:
-* FastQC/0.11.9-Java-11
-* BLAST+/2.8.1-foss-2018b
-* OBITools/1.2.12-foss-2018b-Python-2.7.15
-* VSEARCH/2.9.1-foss-2018b
+Software/version used:
+* FastQC/0.11.9
+* BLAST+/2.8.1
+* OBITools/1.2.12
+* VSEARCH/2.9.1
