@@ -17,6 +17,6 @@ Software/version used:
 * BLAST+/2.8.1
 * OBITools/1.2.12
 * VSEARCH/2.9.1
----
+
 September 2022, Snorre Flo
 ---
