@@ -1,0 +1,30 @@
+#!/bin/bash
+#SBATCH --account=nn9320k
+#SBATCH --job-name=libqc_stats
+#SBATCH --time=1-00:00:00
+#SBATCH --partition=normal
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=16G
+set -o errexit
+set -o nounset
+
+echo Clean slate
+module --quiet purge
+module load FastQC/0.11.9-Java-11
+module ls
+
+echo Finding correct directory
+cd /cluster/work/users/snorref/mainseq
+pwd
+ls
+mkdir -p fastqc_output/fastqc_temp
+
+echo Checking quality of libraries in 
+fastqc *.fq -o ./fastqc_output/ -d ./fastqc_output/fastqc_temp/ 
+
+echo Finding number of reads in each library
+wc -l *.fq 
+
+echo Finished
+module purge
+exit 0
