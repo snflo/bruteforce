@@ -1,0 +1,30 @@
+#!/bin/bash
+#SBATCH --account=nn9320k
+#SBATCH --job-name=brute_2
+#SBATCH --time=4-10:00:00
+#SBATCH --partition=normal
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=4G
+set -o errexit
+set -o nounset
+cd /cluster/work/users/snorref/mainseq/SNO1/
+pwd
+ls
+
+echo Chores
+COPC="SNO1"
+INPUT="SNO1.joined.deann.fasta"
+module purge
+module load OBITools/1.2.12-foss-2018b-Python-2.7.15
+module ls
+
+echo Removing unnecessary attributes from headers to speed up downstream processes
+obiannotate -k sample ${COPC}.joined.fasta > ${COPC}.joined.deann.fasta
+wc -l ${COPC}.joined.deann.fasta
+
+echo Splitting files by sample
+obisplit -p ${COPC}_sam_ -t sample $INPUT
+
+echo FINISHED
+module purge
+exit 0

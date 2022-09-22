@@ -1,0 +1,64 @@
+#!/bin/bash
+#SBATCH --account=nn9320k
+#SBATCH --job-name=brute_4
+#SBATCH --time=3-00:00:00
+#SBATCH --partition=normal
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=8G
+set -o errexit
+set -o nounset
+
+echo Chores
+cd /cluster/work/users/snorref/mainseq/
+pwd
+ls
+module --quiet purge
+module load OBITools/1.2.12-foss-2018b-Python-2.7.15
+module ls
+
+echo Counting reads before denoising and chimaera removal 
+wc -l SNO*/SNO*.joined.deann.fasta
+
+echo Concatenating, dereplicating and sorting
+cat SNO*/*.uniq.vseform.sort.denoi.nochim.obi.fasta | obiuniq -m sample | obisort -r -k count > cop_uniq_vseform_sort_denoi_nochim_obi_cat.fasta
+
+echo Renaming the identifiers to something less cryptic
+obiannotate --seq-rank cop_uniq_vseform_sort_denoi_nochim_obi_cat.fasta | obiannotate --set-identifier '"'zotu'%06d" % seq_rank' | obiannotate --delete-tag=seq_rank > cop_uniq_vseform_sort_denoi_nochim_obi_cat_zotu.fasta
+
+echo Counting zOTUs and reads after denoising and chimaera removal
+obicount cop_uniq_vseform_sort_denoi_nochim_obi_cat_zotu.fasta
+
+echo Assign by blasting the PR2 database see separate file for making a PR2 blastable db
+echo Chores
+mkdir results
+module --quiet purge
+module load BLAST+/2.8.1-foss-2018b
+module ls
+
+echo Blasting
+blastn -query cop_uniq_vseform_sort_denoi_nochim_obi_cat_zotu.fasta -db ./PR2/pr2_blast_db -out cop_uniq_vseform_sort_denoi_nochim_obi_cat_zotu_pr2.txt -outfmt '6 qacc sacc pident evalue bitscore length' -max_target_seqs 1 -parse_deflines -evalue 0.00001
+
+echo Adding variable names to first line of blastpr2 output
+sed -i '1i\id|acid_pr2|gene_pr2|organelle_pr2|clone_pr2|kingdom_pr2|supergroup_pr2|division_pr2|class_pr2|order_pr2|family_pr2|genus_pr2|species_pr2|qcover_pr2|eval_pr2|acc_len_pr2|q_len' cop_uniq_vseform_sort_denoi_nochim_obi_cat_zotu_pr2.txt
+sed -i 's/	/|/g' cop_uniq_vseform_sort_denoi_nochim_obi_cat_zotu_pr2.txt
+
+echo Coupling blast results to counts
+echo Chores
+module --quiet purge
+module load OBITools/1.2.12-foss-2018b-Python-2.7.15
+module ls
+
+echo First exporting counts to tabular format, then renaming sample variables and making tab the sebarator
+obitab -o -d cop_uniq_vseform_sort_denoi_nochim_obi_cat_zotu.fasta > cop_uniq_vseform_sort_denoi_nochim_obi_cat_zotu_counts.tab
+sed -i 's/sample://g ; s/	/|/g' cop_uniq_vseform_sort_denoi_nochim_obi_cat_zotu_counts.tab
+
+echo Joining counts and taxonomy and replacing missing values with NA
+join -t$'|' -1 1 -2 1 --header cop_uniq_vseform_sort_denoi_nochim_obi_cat_zotu_counts.tab cop_uniq_vseform_sort_denoi_nochim_obi_cat_zotu_pr2.txt > cop_counts_pr2.txt
+sed -i 's/||/|NA|/g' cop_counts_pr2.txt
+
+echo Exporting
+cp cop_counts_pr2.txt ./results/cop_counts_pr2.txt
+
+echo FINISHED
+module purge
+exit 0

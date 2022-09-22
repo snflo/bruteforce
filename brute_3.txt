@@ -1,0 +1,54 @@
+#!/bin/bash
+#SBATCH --account=nn9320k
+#SBATCH --job-name=brute_3
+#SBATCH --time=1-00:00:00
+#SBATCH --partition=normal
+#SBATCH --cpus-per-task=30
+#SBATCH --mem-per-cpu=2G
+set -o errexit
+set -o nounset
+cd /cluster/work/users/snorref/mainseq/SNO1/
+pwd
+ls
+
+echo Chores
+COPC="SNO1"
+CORES=30
+module --quiet purge
+module load OBITools/1.2.12-foss-2018b-Python-2.7.15
+module ls
+
+echo Dereplicating
+for i in ${COPC}_sam_*.fasta ; do obiuniq $i > ${i/.fasta/.uniq.fasta} & done
+wait
+
+echo Converting to vsearch format
+for i in ${COPC}_sam_*.uniq.fasta ; do sed 's/_CONS_SUB_SUB_CMP//g ; s/_CONS_SUB_SUB//g ; s/>ST-/>ST./g ; s/ count=/;size=/g' $i > ${i/.uniq.fasta/.uniq.vseform.fasta} & done
+wait
+
+echo Sorting
+module --quiet purge
+module load VSEARCH/2.9.1-foss-2018b
+module ls
+for i in ${COPC}_sam_*.uniq.vseform.fasta ; do vsearch --sortbysize $i --notrunclabels --output ${i/.uniq.vseform.fasta/.uniq.vseform.sort.fasta} & done
+wait
+echo DONE!
+
+echo Denoising w unoise3 algorithm
+for i in ${COPC}_sam_*.uniq.vseform.sort.fasta ; do vsearch --cluster_unoise $i --minsize 4 --notrunclabels --unoise_alpha 8 --centroids ${i/.uniq.vseform.sort.fasta/.uniq.vseform.sort.denoi.fasta} & done
+wait
+echo DONE!
+
+echo Chimera removal
+for i in ${COPC}_sam_*.uniq.vseform.sort.denoi.fasta ; do vsearch --uchime3_denovo $i --sizein --notrunclabels --nonchimeras ${i/.uniq.vseform.sort.denoi.fasta/.uniq.vseform.sort.denoi.nochim.fasta} --chimeras ${i/.uniq.vseform.sort.denoi.fasta/.uniq.vseform.sort.denoi.chim.fasta} --uchimeout ${i/.uniq.vseform.sort.denoi.fasta/.uniq.vseform.sort.denoi.chimeout.txt} & done
+wait
+echo DONE!
+
+echo Returning to OBITools format
+for i in ${COPC}_sam_*.uniq.vseform.sort.denoi.nochim.fasta ; do sed 's/;size=/ count=/g' $i > ${i/.uniq.vseform.sort.denoi.nochim.fasta/.uniq.vseform.sort.denoi.nochim.obi.fasta} & done
+wait
+echo DONE!
+
+echo FINISHED
+module purge
+exit 0

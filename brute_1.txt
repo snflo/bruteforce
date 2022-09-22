@@ -1,0 +1,36 @@
+#!/bin/bash
+#SBATCH --account=nn9320k
+#SBATCH --job-name=brute_1
+#SBATCH --time=3-12:00:00
+#SBATCH --partition=normal
+#SBATCH --cpus-per-task=40
+#SBATCH --mem-per-cpu=4G
+set -o errexit
+set -o nounset
+cd /cluster/work/users/snorref/mainseq/SNO1/
+pwd
+ls
+
+echo Chores
+INPUT_FORWARD=SNO1f.fq
+INPUT_REVERSE=SNO1r.fq
+COPB="SNO1"
+CORES=40
+
+echo Distributing
+module purge
+module load OBITools/1.2.12-foss-2018b-Python-2.7.15
+module ls
+obidistribute -n $CORES -p ''$COPB"_R1_part" $INPUT_FORWARD &
+obidistribute -n $CORES -p ''$COPB"_R2_part" $INPUT_REVERSE & 
+wait
+
+echo Doing paired-end alignment, quality-filter, demultiplexing and length filter
+for i in $(seq 01 1 $CORES) ; do illuminapairedend -r ${COPB}_R2_part_$(printf "%02d" $i).fastq ${COPB}_R1_part_$(printf "%02d" $i).fastq | obigrep -p 'score>40.00' | ngsfilter -t ${COPB}_ngsfilter.txt | obigrep -p 'seq_length>80' -p 'seq_length<120' -s '^[ACGT]+$' --fasta-output > ${COPB}.filtered_$(printf "%02d" $i).fasta & done
+wait
+
+cat $COPB.filtered_*.fasta > $COPB.joined.fasta
+
+echo FINISHED
+module purge
+exit 0
