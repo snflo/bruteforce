@@ -1,4 +1,5 @@
-# bruteforce
+#   bruteforce
+##  September 2022
 The following code has been used for processing and analysing large quantities of mixed sample sequencing data for prey analysis of small Arctic copepods. Manual considerations are needed to implement scripts in other pipelines. 
 
 brute_# scripts perform bioinformatic processing of sequences
