@@ -1,6 +1,6 @@
 ##   bruteforce
 #### September 2022, Snorre Flo
-The following code has been used for processing and analysing large quantities of mixed sample sequencing data for prey analysis of small Arctic copepods. The scripts take multiplexed .fastq-files as input (samples are distinguished by oligotags attached to primers), and returns a .txt-table with zero-radius OTUs (rows) and associated taxonomy (PR2, columns) and sample counts (columns). Manual considerations and modifications are needed to implement scripts in other pipelines. 
+The following code has been used for processing and analysing large quantities of mixed sample sequencing data for prey analysis of small Arctic copepods. The scripts take multiplexed .fastq-files as input (samples are distinguished by oligotags attached to primers), and returns a .txt-table with zero-radius OTUs (rows) and associated taxonomy (PR2, columns) and sample counts (columns). Manual considerations and modifications to code are needed to implement scripts in other pipelines. 
 
 The brute_#.txt scripts do the following processing:
 * brute_1.txt - pairing, quality-filtering, demultiplexing, length-filtering
