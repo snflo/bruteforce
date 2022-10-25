@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --account=nn9320k
+#SBATCH --account=nn?????
 #SBATCH --job-name=brute_2
 #SBATCH --time=4-10:00:00
 #SBATCH --partition=normal
