@@ -1,4 +1,7 @@
 ##   bruteforce
+
+![image](https://user-images.githubusercontent.com/114154085/197736616-df565b10-86e1-4522-ad58-6f699c072c73.png)
+
 #### Oktober 2022, Snorre Flo
 The following code has been used for processing large quantities of mixed sample sequencing data for prey studies in small Arctic copepods. The scripts take .fastq-files with multiplexed samples distinguished by oligotags, and returns a .txt-table with zero-radius OTUs (rows), associated taxonomy (PR2, columns) and sample counts (columns). 
 
