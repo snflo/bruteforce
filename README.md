@@ -19,5 +19,5 @@ Software/database and versions used:
 * BLAST+/2.8.1 (Altschul et al. 1990, Camacho et al. 2009, https://pubmed.ncbi.nlm.nih.gov/2231712/)
 * OBITools/1.2.12 (Boyer et al. 2016, https://git.metabarcoding.org/obitools/obitools, https://pythonhosted.org/OBITools/introduction.html)
 * VSEARCH/2.9.1 (Rognes et al. 2016, https://github.com/torognes/vsearch)
-* Protist Ribosomal database (PR2, Guillou et al. 2013, https://pr2-database.org/)
+* Protist Ribosomal database (PR2)/4.14.0 (Guillou et al. 2013, https://pr2-database.org/)
 
