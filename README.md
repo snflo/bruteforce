@@ -1,4 +1,4 @@
-##   bruteforce
+##   brute force metabarcoding
 #### Oktober 2022, Snorre Flo
 The following code has been used for processing large quantities of sequences to characterize the prey of small Arctic copepods from mixed samples. The scripts take .fastq-files with multiplexed samples distinguished by oligotags, and returns a .txt-table with zero-radius OTUs (rows), associated taxonomy (PR2, columns) and sample counts (columns). A higher than average degree of streamlining and parallelization enables rapid processing, but my be excessive for some uses. Manual considerations and modifications to code are needed to implement scripts in other pipelines. 
 
