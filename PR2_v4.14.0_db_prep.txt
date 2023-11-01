@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --account=nn?????
-#SBATCH --job-name=pipe_asvs
+#SBATCH --job-name=pr2db
 #SBATCH --time=1-00:00:00
 #SBATCH --partition=normal
 #SBATCH --ntasks=1 --cpus-per-task=1
