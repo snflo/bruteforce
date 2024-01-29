@@ -34,7 +34,7 @@ for i in ${COPC}_sam_*.uniq.vseform.fasta ; do vsearch --sortbysize $i --notrunc
 wait
 echo DONE!
 
-echo Denoising w unoise3 algorithm
+echo Denoising w unoise3 algorithm (modify minsize to wanted threshold value for discarding rare zOTUs)
 for i in ${COPC}_sam_*.uniq.vseform.sort.fasta ; do vsearch --cluster_unoise $i --minsize 4 --notrunclabels --unoise_alpha 8 --centroids ${i/.uniq.vseform.sort.fasta/.uniq.vseform.sort.denoi.fasta} & done
 wait
 echo DONE!
